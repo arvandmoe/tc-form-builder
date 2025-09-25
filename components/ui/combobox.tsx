@@ -19,32 +19,28 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-]
+export type ComboItem = { value: string; label: string }
 
-export function ComboboxDemo() {
+type ComboboxProps = {
+  items: ComboItem[]
+  placeholder?: string
+  searchPlaceholder?: string
+  value?: string
+  onChange?: (value: string) => void
+  className?: string
+}
+
+export function Combobox({
+  items,
+  placeholder = "Select...",
+  searchPlaceholder = "Search...",
+  value: controlledValue,
+  onChange,
+  className,
+}: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [uncontrolledValue, setUncontrolledValue] = React.useState("")
+  const value = controlledValue ?? uncontrolledValue
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -53,34 +49,37 @@ export function ComboboxDemo() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className={cn("w-[240px] justify-between", className)}
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+          {value ? items.find((i) => i.value === value)?.label : placeholder}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[240px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder={searchPlaceholder} className="h-9" />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {items.map((item) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={item.value}
+                  value={item.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
+                    const next = currentValue === value ? "" : currentValue
+                    if (onChange) {
+                      onChange(next)
+                    } else {
+                      setUncontrolledValue(next)
+                    }
                     setOpen(false)
                   }}
                 >
-                  {framework.label}
+                  {item.label}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === item.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
