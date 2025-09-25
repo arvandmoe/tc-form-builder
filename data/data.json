@@ -1,0 +1,147 @@
+[
+    {
+        "key": "score_thresholds",
+        "name": "Score Thresholds",
+        "category": "engagement",
+        "description": "Apply numeric thresholds to engagement calculations.",
+        "version": "1.0.0",
+        "ui": {
+            "customDependencies": false,
+            "allowAlgorithmSelection": false,
+            "expectedOutputType": "score_map"
+        },
+        "inputs": [
+            {
+                "key": "minVotes",
+                "label": "Minimum Votes",
+                "description": "Users must have at least this many votes.",
+                "type": "number",
+                "min": 0,
+                "step": 1,
+                "default": 5
+            },
+            {
+                "key": "minVe",
+                "label": "Minimum Ve",
+                "description": "Minimum engagement Ve(i) in [0,1].",
+                "type": "number",
+                "min": 0,
+                "max": 1,
+                "step": 0.01,
+                "default": 0.5
+            },
+            {
+                "key": "weight",
+                "label": "Weight",
+                "description": "Multiplier applied to Ve(i).",
+                "type": "number",
+                "min": 0,
+                "step": 0.1,
+                "default": 1
+            }
+        ],
+        "outputs": [
+            {
+                "key": "score_thresholds",
+                "label": "Thresholded Engagement by User",
+                "type": "score_map",
+                "entity": "user",
+                "description": "Scores after applying numeric thresholds."
+            }
+        ]
+    },
+    {
+        "key": "user_text_filters",
+        "name": "User Text Filters",
+        "category": "engagement",
+        "description": "Filter users using simple text-based criteria.",
+        "version": "1.0.0",
+        "ui": {
+            "customDependencies": false,
+            "allowAlgorithmSelection": false,
+            "expectedOutputType": "score_map"
+        },
+        "inputs": [
+            {
+                "key": "userIdPrefix",
+                "label": "User ID Prefix",
+                "description": "Only include users whose ID starts with this value.",
+                "type": "text",
+                "placeholder": "usr_",
+                "required": false
+            },
+            {
+                "key": "includeList",
+                "label": "Include Users",
+                "description": "Comma-separated user IDs to force-include.",
+                "type": "text",
+                "placeholder": "u123,u456",
+                "required": false
+            },
+            {
+                "key": "excludeList",
+                "label": "Exclude Users",
+                "description": "Comma-separated user IDs to exclude.",
+                "type": "text",
+                "placeholder": "u789,u321",
+                "required": false
+            }
+        ],
+        "outputs": [
+            {
+                "key": "user_text_filters",
+                "label": "Filtered Engagement by User",
+                "type": "score_map",
+                "entity": "user",
+                "description": "Scores after text-based filtering."
+            }
+        ]
+    },
+    {
+        "key": "time_window_comparison",
+        "name": "Time Window Comparison",
+        "category": "engagement",
+        "description": "Compute engagement within a primary date range and optionally compare to another range.",
+        "version": "1.0.0",
+        "ui": {
+            "customDependencies": false,
+            "allowAlgorithmSelection": false,
+            "expectedOutputType": "score_map"
+        },
+        "inputs": [
+            {
+                "key": "window",
+                "label": "Primary Date Range",
+                "description": "Analyze votes within this range.",
+                "type": "date_range",
+                "required": true,
+                "date_range": {
+                    "format": "YYYY-MM-DD",
+                    "allowOpenStart": false,
+                    "allowOpenEnd": false
+                }
+            },
+            {
+                "key": "comparisonWindow",
+                "label": "Comparison Date Range",
+                "description": "Optional date range for comparison.",
+                "type": "date_range",
+                "required": false,
+                "date_range": {
+                    "format": "YYYY-MM-DD",
+                    "allowOpenStart": false,
+                    "allowOpenEnd": false
+                }
+            }
+        ],
+        "outputs": [
+            {
+                "key": "time_window_comparison",
+                "label": "Engagement by User (Date-Filtered)",
+                "type": "score_map",
+                "entity": "user",
+                "description": "Scores computed for the selected window(s)."
+            }
+        ]
+    }
+]
